@@ -3,6 +3,7 @@ main: ${group}
 version: ${version}
 depend:
   - NyEconomy
+  - FICore
 commands:
   pokeproppond:
     description: main cmd
