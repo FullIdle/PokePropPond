@@ -1,97 +1,34 @@
-package me.pokeproppond.pokeproppond;
+package me.pokeproppond.pokeproppond.guihub;
 
-import com.google.common.collect.Lists;
-import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.entities.pixelmon.stats.StatsType;
 import com.pixelmonmod.pixelmon.enums.TextJustification;
-import com.pixelmonmod.pixelmon.items.ItemPixelmonSprite;
 import com.pixelmonmod.pixelmon.items.ItemUIElement;
-import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import lombok.Getter;
-import me.fullidle.ficore.ficore.common.api.ineventory.ListenerInvHolder;
 import me.fullidle.ficore.ficore.common.bukkit.inventory.CraftItemStack;
+import me.pokeproppond.pokeproppond.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
-import java.util.List;
 
 @Getter
-public class Gui extends ListenerInvHolder {
-    private static final List<Integer> emptyList = Lists.newArrayList(
-            10, 13, 16, 37, 40, 43
-    );
-    private final Inventory inventory;
-    private final Player player;
-    private Pokemon targetPoke = null;
+public class EvsGui extends GuiHelper {
+    private boolean isSelectMenu = true;
 
-    public Gui(Player player) {
-        this.player = player;
-        this.inventory = Bukkit.createInventory(this, 6 * 9, "§f§l努力值分点");
-        setMainMenu();
+    public EvsGui(Player player) {
+        super(player,"§f§l努力值分点");
     }
 
-    private void removeMenu() {
-        for (int i = 1; i < 54; i++) {
-            this.inventory.setItem(i, null);
+    @Override
+    public void selectPoke(Pokemon pokemon) {
+        if (pokemon.isEgg()) {
+            return;
         }
-    }
-
-    private void setMainMenu() {
-        removeMenu();
-        //clear data
-        this.targetPoke = null;
-
-        //set
-        ItemStack itemStack = CraftItemStack.asBukkitCopy(
-                ItemUIElement.builder()
-                        .setImage("minecraft:textures/gui/demo_background.png")
-                        .setSize(163, 112)
-                        .setTextureSize(230, 190)
-                        .setPosOffset(-1, -1)
-                        .setUV(5, 5)
-                        .setZLevel(0)
-                        .build());
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(" ");
-        itemStack.setItemMeta(itemMeta);
-        this.inventory.setItem(0, itemStack);
-        ItemStack bg = CraftItemStack.asBukkitCopy(
-                ItemUIElement.builder()
-                        .setImage("pixelmon:textures/gui/starter/background.png")
-                        .setSize(162, 110)
-                        .setTextureSize(162, 110)
-                        .setPosOffset(-18, 0)
-                        .setZLevel(0)
-                        .build());
-        ItemMeta bgM = bg.getItemMeta();
-        bgM.setDisplayName(" ");
-        bg.setItemMeta(bgM);
-        this.inventory.setItem(1, bg);
-
-        PlayerPartyStorage party = Pixelmon.storageManager.getParty(this.player.getUniqueId());
-        Pokemon[] all = party.getAll();
-        for (int i = 0; i < all.length; i++) {
-            this.inventory.setItem(emptyList.get(i), getPokeItemStack(all[i]));
-        }
-        this.onClick(e -> {
-            e.setCancelled(true);
-            if (e.getClickedInventory() instanceof PlayerInventory || !emptyList.contains(e.getSlot())) return;
-            int slot = e.getSlot();
-            int pos = emptyList.indexOf(slot);
-            PlayerPartyStorage pps = Pixelmon.storageManager.getParty(this.player.getUniqueId());
-            Pokemon pokemon = pps.get(pos);
-            if (pokemon == null || pokemon.isEgg()) return;
-            setEffortPokeMenu(pokemon);
-        });
-    }
-
-    private void setEffortPokeMenu(Pokemon poke) {
+        this.isSelectMenu = false;
         removeMenu();
         //background
         {
@@ -106,12 +43,12 @@ public class Gui extends ListenerInvHolder {
             ItemMeta itemMeta = aBg.getItemMeta();
             itemMeta.setDisplayName(" ");
             aBg.setItemMeta(itemMeta);
-            this.inventory.setItem(45, aBg);
+            this.getInventory().setItem(45, aBg);
         }
         //evsTag/data
         {
             {
-                long data = Main.nyeApi.getBalance(Main.evPoints,this.player.getName());
+                int data = Main.nyeApi.getBalance(Main.evPoints, this.getPlayer().getName());
                 String name = "§l总点:" + data;
                 ItemStack total = CraftItemStack.asBukkitCopy(
                         ItemUIElement.builder()
@@ -123,7 +60,7 @@ public class Gui extends ListenerInvHolder {
                 ItemMeta itemMeta = total.getItemMeta();
                 itemMeta.setDisplayName(name);
                 total.setItemMeta(itemMeta);
-                this.inventory.setItem(46, total);
+                this.getInventory().setItem(46, total);
             }
             StatsType[] statValues = StatsType.getStatValues();
             for (int i = 0; i < statValues.length; i++) {
@@ -140,7 +77,7 @@ public class Gui extends ListenerInvHolder {
                     ItemMeta itemMeta = stack.getItemMeta();
                     itemMeta.setDisplayName(typeName);
                     stack.setItemMeta(itemMeta);
-                    this.inventory.setItem(4 + (i * 9), stack);
+                    this.getInventory().setItem(4 + (i * 9), stack);
                 }
                 //<
                 {
@@ -156,7 +93,7 @@ public class Gui extends ListenerInvHolder {
                     itemMeta.setDisplayName("§l-");
                     itemMeta.setLore(Collections.singletonList("§r§l四倍率(shift+click)"));
                     left.setItemMeta(itemMeta);
-                    this.inventory.setItem(6 + (i * 9), left);
+                    this.getInventory().setItem(6 + (i * 9), left);
                 }
                 //>
                 {
@@ -172,11 +109,11 @@ public class Gui extends ListenerInvHolder {
                     itemMeta.setDisplayName("§l+");
                     itemMeta.setLore(Collections.singletonList("§r§l四倍率(shift+click)"));
                     right.setItemMeta(itemMeta);
-                    this.inventory.setItem(8 + (i * 9), right);
+                    this.getInventory().setItem(8 + (i * 9), right);
                 }
                 //data
                 {
-                    String text = "§l" + poke.getEVs().getStat(statValue);
+                    String text = "§l" + pokemon.getEVs().getStat(statValue);
                     ItemStack data = CraftItemStack.asBukkitCopy(
                             ItemUIElement.builder()
                                     .setTextJustification(TextJustification.CENTER)
@@ -189,7 +126,7 @@ public class Gui extends ListenerInvHolder {
                     itemMeta.setDisplayName(text);
                     itemMeta.setLore(Collections.singletonList("§rAll IN(click me)"));
                     data.setItemMeta(itemMeta);
-                    this.inventory.setItem(7 + (i * 9), data);
+                    this.getInventory().setItem(7 + (i * 9), data);
                 }
             }
         }
@@ -207,7 +144,7 @@ public class Gui extends ListenerInvHolder {
             ItemMeta itemMeta = cancel.getItemMeta();
             itemMeta.setDisplayName("§c取消");
             cancel.setItemMeta(itemMeta);
-            this.inventory.setItem(36, cancel);
+            this.getInventory().setItem(36, cancel);
         }
 
         {
@@ -222,29 +159,29 @@ public class Gui extends ListenerInvHolder {
             ItemMeta itemMeta = save.getItemMeta();
             itemMeta.setDisplayName("§a保存");
             save.setItemMeta(itemMeta);
-            this.inventory.setItem(38, save);
+            this.getInventory().setItem(38, save);
         }
 
 
         //poke
-        this.targetPoke = poke;
+        this.setTargetPoke(pokemon);
         {
             ItemStack photo = CraftItemStack.asBukkitCopy(
-                    getPokePhotoBuilder(poke)
+                    GuiHelper.getPokePhotoBuilder(pokemon)
                             .setSize(55, 55)
                             .setTextureSize(55, 55)
-                            .setPosOverride(9, 30)
+                            .setPosOverride(9, 38)
                             .setZLevel(2)
                             .build());
             ItemMeta itemMeta = photo.getItemMeta();
             itemMeta.setDisplayName(" ");
             photo.setItemMeta(itemMeta);
-            this.inventory.setItem(19, photo);
+            this.getInventory().setItem(19, photo);
         }
         //pokeName
         {
-            String displayName = "§l" + ((poke.getNickname() == null || poke.getNickname().replace(" ", "").isEmpty())
-                    ? poke.getLocalizedName() : poke.getNickname());
+            String displayName = "§l" + ((pokemon.getNickname() == null || pokemon.getNickname().replace(" ", "").isEmpty())
+                    ? pokemon.getLocalizedName() : pokemon.getNickname());
             ItemStack name = CraftItemStack.asBukkitCopy(
                     ItemUIElement.builder()
                             .setTextJustification(TextJustification.CENTER)
@@ -256,7 +193,7 @@ public class Gui extends ListenerInvHolder {
             ItemMeta itemMeta = name.getItemMeta();
             itemMeta.setDisplayName(displayName);
             name.setItemMeta(itemMeta);
-            this.inventory.setItem(1, name);
+            this.getInventory().setItem(1, name);
         }
 
         this.onClick(e -> {
@@ -265,28 +202,30 @@ public class Gui extends ListenerInvHolder {
             int slot = e.getSlot();
             //cancel
             if (slot == 36) {
-                this.setMainMenu();
+                this.isSelectMenu = true;
+                this.setSelectMenu();
                 return;
             }
             if (slot == 38) {
                 //待写
                 int[] array = new int[6];
                 for (int i = 0; i < 6; i++) {
-                    array[i] = Integer.parseInt(this.inventory.getItem(7 + (i * 9))
+                    array[i] = Integer.parseInt(this.getInventory().getItem(7 + (i * 9))
                             .getItemMeta().getDisplayName().replace("§l", ""));
                 }
-                this.targetPoke.getEVs().fillFromArray(array);
-                Main.nyeApi.set(Main.evPoints,this.player.getName(),getEvPoints());
+                this.getTargetPoke().getEVs().fillFromArray(array);
+                Main.nyeApi.set(Main.evPoints, this.getPlayer().getName(), getEvPoints());
                 e.getWhoClicked().sendMessage("§a分配数据已保存!");
-                this.setMainMenu();
+                this.isSelectMenu = true;
+                this.setSelectMenu();
                 return;
             }
             //-
             if ((slot - 6) % 9 == 0) {
-                ItemStack item = this.inventory.getItem(slot + 1);
+                ItemStack item = this.getInventory().getItem(slot + 1);
                 ItemMeta itemMeta = item.getItemMeta();
                 int ev = Integer.parseInt(itemMeta.getDisplayName().replace("§l", ""));
-                int evs = poke.getEVs().getArray()[(slot - 6) / 9];
+                int evs = pokemon.getEVs().getArray()[(slot - 6) / 9];
                 if (ev == 0 || ev == evs) return;
                 int ee = ev;
                 if (e.isShiftClick()) {
@@ -302,7 +241,7 @@ public class Gui extends ListenerInvHolder {
                 String text = "§l" + ev;
                 itemMeta.setDisplayName(text);
                 item.setItemMeta(itemMeta);
-                this.inventory.setItem(slot + 1, CraftItemStack.asBukkitCopy(
+                this.getInventory().setItem(slot + 1, CraftItemStack.asBukkitCopy(
                         ItemUIElement.builder(((net.minecraft.item.ItemStack) CraftItemStack.asNMSCopy(item)))
                                 .setText(text)
                                 .build()));
@@ -311,7 +250,7 @@ public class Gui extends ListenerInvHolder {
             }
             //all in
             if ((slot - 7) % 9 == 0) {
-                ItemStack item = this.inventory.getItem(slot);
+                ItemStack item = this.getInventory().getItem(slot);
                 int evPoints = this.getEvPoints();
                 ItemMeta itemMeta = item.getItemMeta();
                 int ev = Integer.parseInt(itemMeta.getDisplayName().replace("§l", ""));
@@ -319,7 +258,7 @@ public class Gui extends ListenerInvHolder {
                 int rt;
                 int re;
                 if (e.isShiftClick()) {
-                    int ov = this.targetPoke.getEVs().getArray()[pos];
+                    int ov = this.getTargetPoke().getEVs().getArray()[pos];
                     if (ev == ov) return;
                     rt = evPoints + (ev - ov);
                     re = ov;
@@ -333,7 +272,7 @@ public class Gui extends ListenerInvHolder {
                 String text = "§l" + re;
                 itemMeta.setDisplayName(text);
                 item.setItemMeta(itemMeta);
-                this.inventory.setItem(slot, CraftItemStack.asBukkitCopy(
+                this.getInventory().setItem(slot, CraftItemStack.asBukkitCopy(
                         ItemUIElement.builder(((net.minecraft.item.ItemStack) CraftItemStack.asNMSCopy(item)))
                                 .setText(text)
                                 .build()));
@@ -346,22 +285,22 @@ public class Gui extends ListenerInvHolder {
                 if (evPoints == 0) return;
                 int total = this.getEvTotal();
                 if (total == 510) return;
-                ItemStack item = this.inventory.getItem(slot - 1);
+                ItemStack item = this.getInventory().getItem(slot - 1);
                 ItemMeta itemMeta = item.getItemMeta();
                 int ev = Integer.parseInt(itemMeta.getDisplayName().replace("§l", ""));
                 if (ev == 252) return;
                 int ee = ev;
                 if (e.isShiftClick()) {
-                    int canA = Math.min(510 - total, 4);
-                    if (ev + canA > 252) {
+                    int canM = Math.min(510 - total, 4);
+                    if (ev + canM > 252) {
                         ev = 252;
                     } else {
-                        ev += canA;
+                        ev += canM;
                     }
                 } else {
                     ev++;
                 }
-                long ec = ev - ee;
+                int ec = ev - ee;
                 if (ec > evPoints) {
                     ec = evPoints;
                     ev = ee + evPoints;
@@ -370,28 +309,32 @@ public class Gui extends ListenerInvHolder {
                 String text = "§l" + ev;
                 itemMeta.setDisplayName(text);
                 item.setItemMeta(itemMeta);
-                this.inventory.setItem(slot - 1, CraftItemStack.asBukkitCopy(
+                this.getInventory().setItem(slot - 1, CraftItemStack.asBukkitCopy(
                         ItemUIElement.builder(((net.minecraft.item.ItemStack) CraftItemStack.asNMSCopy(item)))
                                 .setText(text)
                                 .build()));
                 this.setEvPoints(evPoints - ec);
-                return;
             }
-            return;
+        });
+        this.onClose(e->{
+            if (this.isSelectMenu) return;
+            this.isSelectMenu = true;
+            this.setSelectMenu();
+            Bukkit.getScheduler().runTask(Main.plugin,()->{e.getPlayer().openInventory(e.getInventory());});
         });
     }
 
     private int getEvPoints() {
-        return Integer.parseInt(this.inventory.getItem(46).getItemMeta().getDisplayName().replace("§l总点:", ""));
+        return Integer.parseInt(this.getInventory().getItem(46).getItemMeta().getDisplayName().replace("§l总点:", ""));
     }
 
     private void setEvPoints(long value) {
-        ItemStack item = this.inventory.getItem(46);
+        ItemStack item = this.getInventory().getItem(46);
         ItemMeta itemMeta = item.getItemMeta();
         String text = "§l总点:" + value;
         itemMeta.setDisplayName(text);
         item.setItemMeta(itemMeta);
-        this.inventory.setItem(46, CraftItemStack.asBukkitCopy(
+        this.getInventory().setItem(46, CraftItemStack.asBukkitCopy(
                 ItemUIElement.builder(((net.minecraft.item.ItemStack) CraftItemStack.asNMSCopy(item)))
                         .setText(text)
                         .build()
@@ -399,51 +342,14 @@ public class Gui extends ListenerInvHolder {
     }
 
     private int getEvTotal() {
-        if (this.targetPoke == null) {
+        if (this.getTargetPoke() == null) {
             return -1;
         }
         int total = 0;
         for (int i = 0; i < 6; i++) {
             total += Integer.parseInt(
-                    this.inventory.getItem(7 + (i * 9)).getItemMeta().getDisplayName().replace("§l", ""));
+                    this.getInventory().getItem(7 + (i * 9)).getItemMeta().getDisplayName().replace("§l", ""));
         }
         return total;
-    }
-
-    private ItemStack getPokeItemStack(Pokemon pokemon) {
-        ItemStack itemStack;
-        if (pokemon == null) {
-            itemStack = CraftItemStack.asBukkitCopy(
-                    ItemUIElement.builder()
-                            .setImage("pixelmon:textures/gui/wikiicon.png")
-                            .setSize(16, 16)
-                            .setTextureSize(16, 16)
-                            .setZLevel(1)
-                            .build());
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName("§c空槽");
-            itemStack.setItemMeta(itemMeta);
-            return itemStack;
-        }
-        itemStack = org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack.asBukkitCopy(
-                (((net.minecraft.server.v1_12_R1.ItemStack) (Object)
-                        ItemPixelmonSprite.getPhoto(pokemon))));
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName("§3" + pokemon.getLocalizedName());
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
-    }
-
-    public ItemUIElement.Builder getPokePhotoBuilder(Pokemon pokemon) {
-        StringBuilder builder = new StringBuilder("pixelmon:textures/sprites/");
-        builder.append((pokemon.isShiny() ? "shinypokemon/" : "pokemon/"));
-        int i = pokemon.getSpecies().getNationalPokedexInteger();
-        builder.append(String.format("%03d", i));
-        if (pokemon.getFormEnum().isDefaultForm()) {
-            builder.append(pokemon.getFormEnum().getFormSuffix());
-        }
-        builder.append(".png");
-        String path = builder.toString();
-        return ItemUIElement.builder().setImage(path);
     }
 }
