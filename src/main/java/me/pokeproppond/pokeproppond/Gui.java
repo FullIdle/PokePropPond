@@ -352,10 +352,11 @@ public class Gui extends ListenerInvHolder {
                 if (ev == 252) return;
                 int ee = ev;
                 if (e.isShiftClick()) {
-                    if (ev + 4 > 252) {
+                    int canA = Math.min(510 - total, 4);
+                    if (ev + canA > 252) {
                         ev = 252;
                     } else {
-                        ev += 4;
+                        ev += canA;
                     }
                 } else {
                     ev++;
@@ -363,7 +364,7 @@ public class Gui extends ListenerInvHolder {
                 long ec = ev - ee;
                 if (ec > evPoints) {
                     ec = evPoints;
-                    ev = (int) (ee + evPoints);
+                    ev = ee + evPoints;
                 }
 
                 String text = "§l" + ev;
