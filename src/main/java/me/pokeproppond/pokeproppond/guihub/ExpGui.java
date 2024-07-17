@@ -9,7 +9,6 @@ import lombok.Getter;
 import me.fullidle.ficore.ficore.common.bukkit.inventory.CraftItemStack;
 import me.pokeproppond.pokeproppond.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -180,7 +179,7 @@ public class ExpGui extends GuiHelper {
             this.getInventory().setItem(2, name);
         }
         //event handler
-        this.onOpen(e->{
+        this.onOpen(e -> {
             if (this.isLevelingUpGui) {
                 this.selectPoke(this.getTargetPoke());
             }
@@ -202,13 +201,14 @@ public class ExpGui extends GuiHelper {
                 Level lc = this.getTargetPoke().getLevelContainer();
                 int oe = lc.getExp();
                 int pay = ne - oe;
-                Main.nyeApi.set(Main.expPoints,this.getPlayer().getName(),et);
-                if (pay == lc.expToNextLevel - oe){
+                Main.nyeApi.set(Main.expPoints, this.getPlayer().getName(), et);
+                if (pay == lc.expToNextLevel - oe) {
                     this.isLevelingUpGui = true;
-                }else{
-                    Bukkit.getScheduler().runTask(Main.plugin,()->{this.selectPoke(this.getTargetPoke());});
+                } else {
+                    Bukkit.getScheduler().runTask(Main.plugin, () ->
+                            this.selectPoke(this.getTargetPoke()));
                 }
-                lc.awardEXP(pay,ExperienceGainType.RARE_CANDY);
+                lc.awardEXP(pay, ExperienceGainType.RARE_CANDY);
                 return;
             }
             if (slot == 15) {

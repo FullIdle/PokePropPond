@@ -3,11 +3,10 @@ package me.pokeproppond.pokeproppond;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 public class Util {
     @Test
-    public void test(){
+    public void test() {
         List<String> list = Arrays.asList(
                 "      a  ",
                 "      a  ",
@@ -20,7 +19,7 @@ public class Util {
             char[] chars = list.get(y).toCharArray();
             for (int i = 0; i < chars.length; i++) {
                 if (chars[i] == 'a') {
-                    System.out.println(y*9+i);
+                    System.out.println(y * 9 + i);
                 }
             }
         }

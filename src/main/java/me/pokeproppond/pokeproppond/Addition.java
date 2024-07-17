@@ -1,7 +1,6 @@
 package me.pokeproppond.pokeproppond;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -10,7 +9,7 @@ import java.util.Set;
 
 @Getter
 public class Addition {
-    public static void init(Main pl){
+    public static void init(Main pl) {
         AdType.init(pl);
     }
 
@@ -24,17 +23,17 @@ public class Addition {
         this.value = value;
     }
 
-    public int calculateBonusResults(Player player,int oldValue){
+    public int calculateBonusResults(Player player, int oldValue) {
         if (!player.hasPermission(this.getPermission())) {
             return oldValue;
         }
-        return this.calculationType.calculationResults(oldValue,this.value);
+        return this.calculationType.calculationResults(oldValue, this.value);
     }
 
-    public enum CalculationType{
-        PLUS,MULTIPLY,REPLACE;
+    public enum CalculationType {
+        PLUS, MULTIPLY, REPLACE;
 
-        public int calculationResults(int oldV,int addV){
+        public int calculationResults(int oldV, int addV) {
             if (this == PLUS) return oldV + addV;
             if (this == MULTIPLY) return oldV * addV;
             if (this == REPLACE) return addV;
@@ -43,12 +42,12 @@ public class Addition {
     }
 
     @Getter
-    public enum AdType{
-        EVS,EXP;
+    public enum AdType {
+        EVS, EXP;
 
         private Addition[] additions;
 
-        private static void init(Main pl){
+        private static void init(Main pl) {
             for (AdType value : AdType.values()) {
                 value.additions = new Addition[0];
             }
@@ -60,21 +59,21 @@ public class Addition {
                     ArrayList<Addition> list = new ArrayList<>();
                     for (String key : keys) {
                         list.add(new Addition(
-                                key,CalculationType.valueOf(section.getString(key+".type"))
-                                ,section.getInt(key+".value")
+                                key, CalculationType.valueOf(section.getString(key + ".type"))
+                                , section.getInt(key + ".value")
                         ));
                     }
                     EVS.additions = list.toArray(new Addition[0]);
                 }
             }
-            if (section1 != null){
+            if (section1 != null) {
                 Set<String> keys = section1.getKeys(false);
                 if (!keys.isEmpty()) {
                     ArrayList<Addition> list = new ArrayList<>();
                     for (String key : keys) {
                         list.add(new Addition(
-                                key,CalculationType.valueOf(section1.getString(key+".type"))
-                                ,section1.getInt(key+".value")
+                                key, CalculationType.valueOf(section1.getString(key + ".type"))
+                                , section1.getInt(key + ".value")
                         ));
                     }
                     EXP.additions = list.toArray(new Addition[0]);

@@ -20,7 +20,7 @@ public class EvsGui extends GuiHelper {
     private boolean isSelectMenu = true;
 
     public EvsGui(Player player) {
-        super(player,"§f§l努力值分点");
+        super(player, "§f§l努力值分点");
     }
 
     @Override
@@ -316,11 +316,11 @@ public class EvsGui extends GuiHelper {
                 this.setEvPoints(evPoints - ec);
             }
         });
-        this.onClose(e->{
+        this.onClose(e -> {
             if (this.isSelectMenu) return;
             this.isSelectMenu = true;
             this.setSelectMenu();
-            Bukkit.getScheduler().runTask(Main.plugin,()->{e.getPlayer().openInventory(e.getInventory());});
+            Bukkit.getScheduler().runTask(Main.plugin, () -> e.getPlayer().openInventory(e.getInventory()));
         });
     }
 

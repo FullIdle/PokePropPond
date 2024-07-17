@@ -7,15 +7,12 @@ import me.pokeproppond.pokeproppond.guihub.ExpGui;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Main extends JavaPlugin implements TabCompleter {
@@ -30,7 +27,7 @@ public class Main extends JavaPlugin implements TabCompleter {
         nyeApi = NyEconomyAPI.getInstance();
         reloadConfig();
         getCommand("pokeproppond").setExecutor(this);
-        getServer().getPluginManager().registerEvents(new PlayerListener(),this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
     @Override
@@ -44,7 +41,7 @@ public class Main extends JavaPlugin implements TabCompleter {
     }
 
     List<String> sub = Lists.newArrayList(
-            "exp","evs","reload","help"
+            "exp", "evs", "reload", "help"
     );
 
     @Override
@@ -102,7 +99,7 @@ public class Main extends JavaPlugin implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length < 1) return this.sub;
-        if (args.length == 1) return this.sub.stream().filter(s->s.startsWith(args[0])).collect(Collectors.toList());
+        if (args.length == 1) return this.sub.stream().filter(s -> s.startsWith(args[0])).collect(Collectors.toList());
         return null;
     }
 }

@@ -3,7 +3,6 @@ package me.pokeproppond.pokeproppond.guihub;
 import com.google.common.collect.Lists;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
-import com.pixelmonmod.pixelmon.items.ItemPixelmonSprite;
 import com.pixelmonmod.pixelmon.items.ItemUIElement;
 import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 import lombok.Getter;

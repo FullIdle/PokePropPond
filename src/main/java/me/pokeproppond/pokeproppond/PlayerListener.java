@@ -12,11 +12,11 @@ import org.bukkit.event.Listener;
 
 public class PlayerListener implements Listener {
     @EventHandler
-    public void onForge(ForgeEvent event){
-        if (event.getForgeEvent() instanceof EVsGainedEvent){
+    public void onForge(ForgeEvent event) {
+        if (event.getForgeEvent() instanceof EVsGainedEvent) {
             EVsGainedEvent e = (EVsGainedEvent) event.getForgeEvent();
             EntityPlayerMP ownerPlayer = e.pokemon.getOwnerPlayer();
-            if (ownerPlayer == null){
+            if (ownerPlayer == null) {
                 return;
             }
             Player player = Bukkit.getPlayer(ownerPlayer.func_110124_au());
@@ -28,10 +28,10 @@ public class PlayerListener implements Listener {
                 add += ev;
             }
             for (Addition addition : Addition.AdType.EVS.getAdditions()) {
-                add = addition.calculateBonusResults(player,add);
+                add = addition.calculateBonusResults(player, add);
             }
-            Main.nyeApi.deposit(Main.evPoints,playerName,add);
-            player.sendMessage("§a努力点数增加:"+add +"|现总点为:"+Main.nyeApi.getBalance(Main.evPoints,playerName));
+            Main.nyeApi.deposit(Main.evPoints, playerName, add);
+            player.sendMessage("§a努力点数增加:" + add + "|现总点为:" + Main.nyeApi.getBalance(Main.evPoints, playerName));
         }
         if (event.getForgeEvent() instanceof ExperienceGainEvent) {
             ExperienceGainEvent e = (ExperienceGainEvent) event.getForgeEvent();
@@ -41,7 +41,7 @@ public class PlayerListener implements Listener {
                     int add = e.getExperience();
                     String name = player.getName();
                     for (Addition addition : Addition.AdType.EXP.getAdditions()) {
-                        add = addition.calculateBonusResults(player,add);
+                        add = addition.calculateBonusResults(player, add);
                     }
                     Main.nyeApi.deposit(Main.expPoints, name, add);
                     String text = "§a经验点数增加:" + add + "|现总点为:" + Main.nyeApi.getBalance(Main.expPoints, name);
