@@ -1,6 +1,9 @@
 package me.pokeproppond.pokeproppond;
 
+import com.pixelmonmod.pixelmon.api.enums.ExperienceGainType;
+import com.pixelmonmod.pixelmon.api.events.ExperienceGainEvent;
 import com.pixelmonmod.pixelmon.api.events.pokemon.EVsGainedEvent;
+import com.pixelmonmod.pixelmon.battles.BattleRegistry;
 import me.fullidle.ficore.ficore.common.api.event.ForgeEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import org.bukkit.Bukkit;
@@ -27,6 +30,21 @@ public class PlayerListener implements Listener {
             }
             Main.nyeApi.deposit(Main.evPoints,playerName,add);
             player.sendMessage("§a努力点数增加:"+add +"|现总点为:"+Main.nyeApi.getBalance(Main.evPoints,playerName));
+        }
+        if (event.getForgeEvent() instanceof ExperienceGainEvent) {
+            ExperienceGainEvent e = (ExperienceGainEvent) event.getForgeEvent();
+            if (e.getType().equals(ExperienceGainType.BATTLE)) {
+                Player player = Bukkit.getPlayer(e.pokemon.getPlayerOwner().func_110124_au());
+                if (player.hasPermission("pokeproppond.listener.expgained")) {
+                    int add = e.getExperience();
+                    String name = player.getName();
+                    Main.nyeApi.deposit(Main.expPoints, name, add);
+                    String text = "§a经验点数增加:" + add + "|现总点为:" + Main.nyeApi.getBalance(Main.expPoints, name);
+                    e.pokemon.getBattleController().sendToPlayer(e.pokemon.getPlayerOwner(), text);
+                    player.sendMessage(text);
+                    e.setCanceled(true);
+                }
+            }
         }
     }
 }

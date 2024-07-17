@@ -11,9 +11,15 @@ permissions:
   pokeproppond.cmd.reload:
     description: 重载命令
     default: op
+  pokeproppond.cmd.exp:
+    description: 经验点数分配权
+    default: true
   pokeproppond.cmd.evs:
     description: 努力点数分配权
     default: true
   pokeproppond.listener.evsgained:
     description: 取消原版努力值得到的方式
+    default: true
+  pokeproppond.listener.expgained:
+    description: 取消原版对战经验值得到的方式
     default: true
