@@ -126,6 +126,7 @@ public class ExpGui extends GuiHelper {
                             .build());
             ItemMeta itemMeta = up.getItemMeta();
             itemMeta.setDisplayName("§l+");
+            itemMeta.setLore(Collections.singletonList("§r§l1000倍率(shift+click)"));
             up.setItemMeta(itemMeta);
             this.getInventory().setItem(15, up);
         }
@@ -142,6 +143,7 @@ public class ExpGui extends GuiHelper {
                             .build());
             ItemMeta itemMeta = down.getItemMeta();
             itemMeta.setDisplayName("§l-");
+            itemMeta.setLore(Collections.singletonList("§r§l1000倍率(shift+click)"));
             down.setItemMeta(itemMeta);
             this.getInventory().setItem(42, down);
         }

@@ -3,7 +3,6 @@ package me.pokeproppond.pokeproppond;
 import com.pixelmonmod.pixelmon.api.enums.ExperienceGainType;
 import com.pixelmonmod.pixelmon.api.events.ExperienceGainEvent;
 import com.pixelmonmod.pixelmon.api.events.pokemon.EVsGainedEvent;
-import com.pixelmonmod.pixelmon.battles.BattleRegistry;
 import me.fullidle.ficore.ficore.common.api.event.ForgeEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import org.bukkit.Bukkit;
