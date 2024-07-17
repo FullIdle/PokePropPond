@@ -27,6 +27,9 @@ public class PlayerListener implements Listener {
             for (int ev : e.evs) {
                 add += ev;
             }
+            for (Addition addition : Addition.AdType.EVS.getAdditions()) {
+                add = addition.calculateBonusResults(player,add);
+            }
             Main.nyeApi.deposit(Main.evPoints,playerName,add);
             player.sendMessage("§a努力点数增加:"+add +"|现总点为:"+Main.nyeApi.getBalance(Main.evPoints,playerName));
         }
@@ -37,6 +40,9 @@ public class PlayerListener implements Listener {
                 if (player.hasPermission("pokeproppond.listener.expgained")) {
                     int add = e.getExperience();
                     String name = player.getName();
+                    for (Addition addition : Addition.AdType.EXP.getAdditions()) {
+                        add = addition.calculateBonusResults(player,add);
+                    }
                     Main.nyeApi.deposit(Main.expPoints, name, add);
                     String text = "§a经验点数增加:" + add + "|现总点为:" + Main.nyeApi.getBalance(Main.expPoints, name);
                     e.pokemon.getBattleController().sendToPlayer(e.pokemon.getPlayerOwner(), text);

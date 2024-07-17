@@ -7,11 +7,15 @@ import me.pokeproppond.pokeproppond.guihub.ExpGui;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Main extends JavaPlugin implements TabCompleter {
@@ -33,8 +37,10 @@ public class Main extends JavaPlugin implements TabCompleter {
     public void reloadConfig() {
         saveDefaultConfig();
         super.reloadConfig();
-        evPoints = this.getConfig().getString("evPoints");
-        expPoints = this.getConfig().getString("expPoints");
+        FileConfiguration config = this.getConfig();
+        evPoints = config.getString("evPoints");
+        expPoints = config.getString("expPoints");
+        Addition.init(this);
     }
 
     List<String> sub = Lists.newArrayList(

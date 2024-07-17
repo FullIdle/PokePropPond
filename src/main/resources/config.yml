@@ -1,3 +1,26 @@
 #nye内配置的货币
 evPoints: 努力点
 expPoints: 经验点
+
+##额外加成设置
+addition:
+  ##涉及努力点时
+  ##拥有这个额外权限,这样再原本能得到的点数基础上就会在加上对应值
+  evPoints:
+    pokeproppond.addition.vip:
+      ##PLUS(原值上添加,如果加的是负数就是减少了) MULTIPLY(乘以,按照倍率算.如果是小数就是除以)
+      #REPLACE(直接更换结果,不管结果如何有该权限的到的点数直接被替换)
+      type: PLUS
+      ##随意方式所涉及到的值
+      value: 100
+    cusotmpermission.vic:
+      type: REPLACE
+      value: 999
+  ##涉及经验点时
+  expPoints:
+    pokeproppond.addition.vip:
+      type: MULTIPLY
+      value: 50
+    pokeproppond.addition.vic:
+      type: REPLACE
+      value: 9999999
