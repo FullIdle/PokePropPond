@@ -97,10 +97,8 @@ public abstract class GuiHelper extends ListenerInvHolder {
         builder.append((pokemon.isShiny() ? "shinypokemon/" : "pokemon/"));
         int i = pokemon.getSpecies().getNationalPokedexInteger();
         builder.append(String.format("%03d", i));
-        if (pokemon.getFormEnum().isDefaultForm()) {
-            builder.append(pokemon.getFormEnum().getFormSuffix());
-        }
-        builder.append(".png");
+        builder.append(pokemon.getFormEnum().getFormSuffix())
+                .append(".png");
         String path = builder.toString();
         return ItemUIElement.builder().setImage(path);
     }
