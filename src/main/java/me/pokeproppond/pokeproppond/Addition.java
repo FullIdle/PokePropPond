@@ -54,26 +54,30 @@ public class Addition {
             ConfigurationSection section = pl.getConfig().getConfigurationSection("addition.evPoints");
             ConfigurationSection section1 = pl.getConfig().getConfigurationSection("addition.expPoints");
             if (section != null) {
-                Set<String> keys = section.getKeys(false);
+                Set<String> keys = section.getKeys(true);
+                keys.removeAll(section.getKeys(false));
+                keys.removeIf(s-> !s.endsWith(".type"));
                 if (!keys.isEmpty()) {
                     ArrayList<Addition> list = new ArrayList<>();
                     for (String key : keys) {
                         list.add(new Addition(
-                                key, CalculationType.valueOf(section.getString(key + ".type"))
-                                , section.getInt(key + ".value")
+                                key, CalculationType.valueOf(section.getString(key))
+                                , section.getInt(key.substring(0,key.lastIndexOf('.')) + ".value")
                         ));
                     }
                     EVS.additions = list.toArray(new Addition[0]);
                 }
             }
             if (section1 != null) {
-                Set<String> keys = section1.getKeys(false);
+                Set<String> keys = section1.getKeys(true);
+                keys.removeAll(section1.getKeys(false));
+                keys.removeIf(s-> !s.endsWith(".type"));
                 if (!keys.isEmpty()) {
                     ArrayList<Addition> list = new ArrayList<>();
                     for (String key : keys) {
                         list.add(new Addition(
-                                key, CalculationType.valueOf(section1.getString(key + ".type"))
-                                , section1.getInt(key + ".value")
+                                key, CalculationType.valueOf(section1.getString(key))
+                                , section1.getInt(key.substring(0,key.lastIndexOf('.')) + ".value")
                         ));
                     }
                     EXP.additions = list.toArray(new Addition[0]);
